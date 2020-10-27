@@ -12,8 +12,10 @@ dependencies:
     sdk: flutter
   cupertino_icons: ^1.0.0
   camera: ^0.5.8+11
+  tflite: ^1.1.1
   tflite_flutter: ^0.5.0
   tflite_flutter_helper: ^0.1.2
+  image: ^2.1.12
 
 dev_dependencies:
   flutter_test:
@@ -21,5 +23,5 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/detect.tflite
-    - assets/labelmap.txt
+    - assets/mobilenet_v1_1.0_224.tflite
+    - assets/mobilenet_v1_1.0_224.txt

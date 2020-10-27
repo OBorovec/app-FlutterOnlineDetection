@@ -1,18 +1,21 @@
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:camera/camera.dart';
+
+typedef void Callback(CameraImage cameraImage);
 
 class CameraWidget extends StatefulWidget {
-  CameraWidget({Key key}) : super(key: key);
+  final Callback onCameraImage;
+  CameraWidget(this.onCameraImage);
 
   @override
   _CameraWidgetState createState() => _CameraWidgetState();
 }
 
 class _CameraWidgetState extends State<CameraWidget> {
-  List<CameraDescription> cameras;
+  List<CameraDescription> _cameras;
+  int _cameraId = 0;
   CameraController cameraController;
   bool _cameraInitialized = false;
-  CameraImage _savedImage;
 
   @override
   void initState() {
@@ -21,8 +24,9 @@ class _CameraWidgetState extends State<CameraWidget> {
   }
 
   void initializeCamera() async {
-    cameras = await availableCameras();
-    cameraController = CameraController(cameras[0], ResolutionPreset.veryHigh,
+    _cameras = await availableCameras();
+    cameraController = CameraController(
+        _cameras[_cameraId], ResolutionPreset.veryHigh,
         enableAudio: false);
     cameraController.initialize().then((_) async {
       // Start ImageStream
@@ -35,8 +39,16 @@ class _CameraWidgetState extends State<CameraWidget> {
   }
 
   void _processCameraImage(CameraImage image) async {
+    widget.onCameraImage(image);
+  }
+
+  void _switchCamera() {
     setState(() {
-      _savedImage = image;
+      _cameraInitialized = false;
+    });
+    setState(() {
+      _cameraId = (_cameraId + 1) % _cameras.length;
+      initializeCamera();
     });
   }
 
@@ -48,9 +60,21 @@ class _CameraWidgetState extends State<CameraWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-        child: (_cameraInitialized)
-            ? CameraPreview(cameraController)
-            : CircularProgressIndicator());
+    return Scaffold(
+        body: Center(
+            child: (_cameraInitialized)
+                ? CameraPreview(cameraController)
+                : CircularProgressIndicator()),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            _switchCamera();
+          },
+          tooltip: 'Rotate camera',
+          child: Icon(
+            Icons.flip_camera_ios,
+            color: Colors.white,
+          ),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat);
   }
 }
