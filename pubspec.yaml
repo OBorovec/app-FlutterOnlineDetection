@@ -23,5 +23,5 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/mobilenet_v1_1.0_224.tflite
-    - assets/mobilenet_v1_1.0_224.txt
+    - assets/mobilenet_v1_1.0_224_quant/model.tflite
+    - assets/mobilenet_v1_1.0_224_quant/labels.txt

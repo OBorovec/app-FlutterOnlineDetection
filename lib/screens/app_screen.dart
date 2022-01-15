@@ -38,8 +38,8 @@ class _AppScreenState extends State<AppScreen> {
     switch (_mode) {
       case DetectionMode.ImageClassification:
         res = await Tflite.loadModel(
-            model: "assets/mobilenet_v1_1.0_224.tflite",
-            labels: "assets/mobilenet_v1_1.0_224.txt",
+            model: "assets/mobilenet_v1_1.0_224_quant/model.tflite",
+            labels: "assets/mobilenet_v1_1.0_224_quant/labels.txt",
             numThreads: 1);
         break;
       case DetectionMode.ObjectDetection:
